@@ -39,18 +39,22 @@ function studentList() {
   * @return {String} the html form
   */
 function studentForm() {
-  var form = "<form method='POST'>";
+  var form = "<form method='POST' enctype='multipart/form-data'>";
   form +=    "  <fieldset>";
-  form +=    "   <label for='name'>Student Name</label>";
-  form +=    "   <input type='text' name='name'/>";
+  form +=    "    <label for='name'>Student Name</label>";
+  form +=    "    <input type='text' name='name'/>";
   form +=    "  </fieldset>";
   form +=    "  <fieldset>";
-  form +=    "   <label for='eid'>Student Eid</label>";
-  form +=    "   <input type='text' name='eid'/>";
+  form +=    "    <label for='eid'>Student Eid</label>";
+  form +=    "    <input type='text' name='eid'/>";
   form +=    "  </fieldset>";
   form +=    "  <fieldset>";
-  form +=    "   <label for='description'>Description</label>";
-  form +=    "   <textarea name='description'></textarea>";
+  form +=    "    <label for='description'>Description</label>";
+  form +=    "    <textarea name='description'></textarea>";
+  form +=    "  </fieldset>";
+  form +=    "  <fieldset>";
+  form +=    "    <label for='image'>Image</label>";
+  form +=    "    <input type='file' name='image' />";
   form +=    "  </fieldset>";
   form +=    "  <input type='submit' value='add student'/>";
   form +=    "</form>"
@@ -70,16 +74,16 @@ function handleRequest(req, res) {
   if(req.method === "POST") {
     var body = "";
 
-    // Handle incoming data - append it to 
-    // the body 
+    // Handle incoming data - append it to
+    // the body
     req.on('data', function(data) {
       body += data;
     });
 
-    // Once the entire body has loaded, parse the 
+    // Once the entire body has loaded, parse the
     // student object out of it.
     req.on('end', function(){
-      var student = qs.parse(body);
+      var params = qs.parse(body);
 
       // TODO: Validate student object
 
@@ -89,7 +93,7 @@ function handleRequest(req, res) {
         eid: escapeHTML(params.eid),
         description: escapeHTML(params.description)
       });
-      
+
       // Save cache to hard drive
       fs.writeFile('students.json', JSON.stringify(students));
     });
